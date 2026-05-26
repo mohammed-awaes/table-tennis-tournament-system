@@ -78,7 +78,34 @@ python main.py
 
 # Screenshots
 
-Screenshots will be added soon.
+## Home Page
+
+![Home Page](screenshots/home.png)
+
+---
+
+## Create Tournament
+
+![Create Tournament](screenshots/create-tournament.png)
+
+---
+
+## Tournaments Page
+
+![Tournaments](screenshots/tournaments.png)
+
+---
+
+## Tournament Details
+
+![Tournament Details](screenshots/tournament-details-1.png)
+
+---
+
+## Group Stage System
+
+![Group Stage](screenshots/tournament-details-2.png)
+
 
 ---
 
