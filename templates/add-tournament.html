@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+  <div class="tournament-card">
+
+    <h2 class="title">🏓 Create Tournament</h2>
+
+    {% if error %}
+      <div style="color:red; margin-bottom:10px;">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <!-- 🔵 Add Player -->
+    <form method="POST" class="player-form">
+      <input type="text" name="player" placeholder="Enter player name">
+      <button name="add_player">Add Player</button>
+    </form>
+
+    <!-- 🟣 Players List -->
+    <div class="players-box">
+      <h4>Players</h4>
+
+      <div class="players-list">
+        {% for player in players %}
+          <div class="player-tag">🏓 {{ player }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 🟡 Tournament Info -->
+    <form method="POST" class="tournament-form">
+      <input type="text" name="name" value="{{ name }}" placeholder="Tournament Name">
+      <input type="date" name="date"  value="{{ date }}" placeholder="Tournament Date">
+      <input type="number" name="groups_count" placeholder="Number of groups" min="2" value="{{ groups_count }}">
+
+      <button name="create_tournament" class="create-btn">
+        Create Tournament
+      </button>
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}
