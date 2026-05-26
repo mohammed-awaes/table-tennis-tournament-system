@@ -255,104 +255,8 @@ def tournament_details(id):
 
     if request.method == "POST":
 
-        # منع التعديل إذا البطولة انتهت
-        if tournament[3] != "ongoing":
-            return redirect(request.url)
-
-        if "delete_player" in request.form:
-            player_to_delete = request.form["delete_player"]
-
-            # حماية
-            if player_to_delete not in players:
-                return redirect(request.url)
-
-            c.execute(
-                "DELETE FROM tournament_players WHERE tournament_id = ? AND player_name = ?",
-                (id, player_to_delete)
-            )
-
-            conn.commit()
-
-            return redirect(request.url)
-        
-        if "add_player" in request.form:
-            new_player = request.form["new_player"].strip()
-
-            if new_player == "":
-                return render_template(
-                    "tournament_details.html",
-                    tournament=tournament,
-                    players=players,
-                    error="Please enter a player name"
-                )
-
-            if new_player in players:
-                return render_template(
-                    "tournament_details.html",
-                    tournament=tournament,
-                    players=players,
-                    error="Player already in tournament"
-                )
-
-            c.execute(
-                "INSERT INTO tournament_players (tournament_id, player_name) VALUES (?, ?)",
-                (id, new_player)
-            )
-
-            conn.commit()
-
-        if "start_tournament" in request.form:
-
-            # 🛑 منع إعادة التشغيل
-            if tournament[3] != "ongoing":
-                return redirect(request.url)
-
-            # 🛑 تحقق من عدد اللاعبين
-            if len(players) < groups_count:
-                return redirect(request.url)
-
-            # 🛑 حماية groups_count
-            if not groups_count or groups_count < 2:
-                return redirect(request.url)
-
-            # 🔥 حذف المجموعات القديمة
-            c.execute("DELETE FROM groups WHERE tournament_id = ?", (id,))
-
-            # 🎲 خلط اللاعبين
-            players_copy = players.copy()
-            random.shuffle(players_copy)
-
-            # 🧠 إنشاء المجموعات
-            groups = {}
-
-            for i in range(groups_count):
-                group_name = "Group " + chr(65 + i)
-                groups[group_name] = []
-
-            # 🔥 التوزيع الذكي
-            for i, player in enumerate(players_copy):
-                group_index = i % groups_count
-                group_name = "Group " + chr(65 + group_index)
-                groups[group_name].append(player)
-
-            # 💾 التخزين
-            for group_name, group_players in groups.items():
-                for player in group_players:
-                    c.execute("""
-                        INSERT INTO groups (tournament_id, group_name, player_name)
-                        VALUES (?, ?, ?)
-                    """, (id, group_name, player))
-
-            # 🏁 تحديث الحالة
-            c.execute(
-                "UPDATE tournaments SET status='started' WHERE id=?",
-                (id,)
-            )
-
-            conn.commit()
-            return redirect(request.url)
-        
         if "save_match" in request.form:
+            print(request.form)
 
             p1 = request.form["p1"]
             p2 = request.form["p2"]
@@ -414,6 +318,99 @@ def tournament_details(id):
                 VALUES (?, 'round_of_16', ?, ?)
                 """, (id, p1, p2))
 
+
+
+        if "delete_player" in request.form:
+            player_to_delete = request.form["delete_player"]
+
+            # حماية
+            if player_to_delete not in players:
+                return redirect(request.url)
+
+            c.execute(
+                "DELETE FROM tournament_players WHERE tournament_id = ? AND player_name = ?",
+                (id, player_to_delete)
+            )
+
+            conn.commit()
+
+            return redirect(request.url)
+        
+        if "add_player" in request.form:
+            new_player = request.form["new_player"].strip()
+
+            if new_player == "":
+                return render_template(
+                    "tournament_details.html",
+                    tournament=tournament,
+                    players=players,
+                    error="Please enter a player name"
+                )
+
+            if new_player in players:
+                return render_template(
+                    "tournament_details.html",
+                    tournament=tournament,
+                    players=players,
+                    error="Player already in tournament"
+                )
+
+            c.execute(
+                "INSERT INTO tournament_players (tournament_id, player_name) VALUES (?, ?)",
+                (id, new_player)
+            )
+
+            conn.commit()
+
+        if "start_tournament" in request.form:
+
+
+            # 🛑 تحقق من عدد اللاعبين
+            if len(players) < groups_count:
+                return redirect(request.url)
+
+            # 🛑 حماية groups_count
+            if not groups_count or groups_count < 2:
+                return redirect(request.url)
+
+            # 🔥 حذف المجموعات القديمة
+            c.execute("DELETE FROM groups WHERE tournament_id = ?", (id,))
+
+            # 🎲 خلط اللاعبين
+            players_copy = players.copy()
+            random.shuffle(players_copy)
+
+            # 🧠 إنشاء المجموعات
+            groups = {}
+
+            for i in range(groups_count):
+                group_name = "Group " + chr(65 + i)
+                groups[group_name] = []
+
+            # 🔥 التوزيع الذكي
+            for i, player in enumerate(players_copy):
+                group_index = i % groups_count
+                group_name = "Group " + chr(65 + group_index)
+                groups[group_name].append(player)
+
+            # 💾 التخزين
+            for group_name, group_players in groups.items():
+                for player in group_players:
+                    c.execute("""
+                        INSERT INTO groups (tournament_id, group_name, player_name)
+                        VALUES (?, ?, ?)
+                    """, (id, group_name, player))
+
+            # 🏁 تحديث الحالة
+            c.execute(
+                "UPDATE tournaments SET status='started' WHERE id=?",
+                (id,)
+            )
+
+            conn.commit()
+            return redirect(request.url)
+        
+       
 
     return render_template(
         "tournament_details.html",
