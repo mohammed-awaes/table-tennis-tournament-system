@@ -132,22 +132,36 @@
 
                 <td>
 
-                  <form method="POST" style="display:flex; gap:5px; justify-content:center;">
+                  {% set match = matches_dict.get((p1, p2)) %}
 
-                    <input type="hidden" name="p1" value="{{ p1 }}">
-                    <input type="hidden" name="p2" value="{{ p2 }}">
-                    <input type="hidden" name="group" value="{{ group_name }}">
+                  {% if match %}
 
-                    <input type="number" name="score1" min="0" style="width:45px;">
-                    -
-                    <input type="number" name="score2" min="0" style="width:45px;">
+                    <strong style="color:green;">
+                      {{ match[0] }} - {{ match[1] }}
+                    </strong>
 
-                    <button name="save_match" class="btn btn-sm btn-success">✔</button>
+                  {% else %}
 
-                  </form>
+                    <form method="POST" style="display:flex; gap:5px; justify-content:center;">
+
+                      <input type="hidden" name="p1" value="{{ p1 }}">
+                      <input type="hidden" name="p2" value="{{ p2 }}">
+                      <input type="hidden" name="group" value="{{ group_name }}">
+
+                      <input type="number" name="score1" min="0" style="width:45px;">
+                      -
+                      <input type="number" name="score2" min="0" style="width:45px;">
+
+                      <button type="submit" name="save_match" value="1" class="btn btn-sm btn-success">
+                        ✔
+                      </button>
+
+                    </form>
+
+                  {% endif %}   <!-- 🔥 هذا كان ناقص -->
 
                 </td>
-
+                
               {% endif %}
 
             {% endfor %}

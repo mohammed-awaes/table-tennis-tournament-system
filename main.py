@@ -233,6 +233,21 @@ def tournament_details(id):
     c.execute("SELECT player_name FROM tournament_players WHERE tournament_id = ?", (id,))
     players = [p[0] for p in c.fetchall()]
 
+        # 🟢 جلب نتائج المباريات
+    c.execute("""
+    SELECT player1, player2, score1, score2
+    FROM group_matches
+    WHERE tournament_id=?
+    """, (id,))
+
+    matches = c.fetchall()
+
+    matches_dict = {}
+
+    for p1, p2, s1, s2 in matches:
+        matches_dict[(p1, p2)] = (s1, s2)
+        matches_dict[(p2, p1)] = (s2, s1)   # 🔥 مهم جدًا
+
     c.execute("""
     SELECT group_name, player_name
     FROM groups
@@ -256,20 +271,39 @@ def tournament_details(id):
     if request.method == "POST":
 
         if "save_match" in request.form:
-            print(request.form)
 
-            p1 = request.form["p1"]
-            p2 = request.form["p2"]
-            group = request.form["group"]
+            p1 = request.form.get("p1")
+            p2 = request.form.get("p2")
+            group = request.form.get("group")
 
-            s1 = request.form["score1"]
-            s2 = request.form["score2"]
+            s1 = request.form.get("score1")
+            s2 = request.form.get("score2")
 
+            if not p1 or not p2 or s1 == "" or s2 == "":
+                return redirect(request.url)
+
+            # 🔥 check if exists
             c.execute("""
-            INSERT INTO group_matches
-            (tournament_id, group_name, player1, player2, score1, score2)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """, (id, group, p1, p2, s1, s2))
+            SELECT id FROM group_matches
+            WHERE tournament_id=? AND group_name=? AND player1=? AND player2=?
+            """, (id, group, p1, p2))
+
+            existing = c.fetchone()
+
+            if existing:
+                # 🔄 update
+                c.execute("""
+                UPDATE group_matches
+                SET score1=?, score2=?
+                WHERE id=?
+                """, (s1, s2, existing[0]))
+            else:
+                # ➕ insert
+                c.execute("""
+                INSERT INTO group_matches
+                (tournament_id, group_name, player1, player2, score1, score2)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, (id, group, p1, p2, s1, s2))
 
             conn.commit()
             return redirect(request.url)
@@ -417,6 +451,8 @@ def tournament_details(id):
         tournament=tournament,
         players=players,
         groups=groups,
+        matches_dict=matches_dict 
+
     )
 
 if __name__ == "__main__":
