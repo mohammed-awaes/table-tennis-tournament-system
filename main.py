@@ -266,7 +266,8 @@ def tournament_details(id):
     else:
         groups = None
 
-
+    standings = {}
+    sorted_players = []
 
     if request.method == "POST":
 
@@ -312,6 +313,7 @@ def tournament_details(id):
 
             group = request.form["group_name"]
 
+            # 🔥 جلب مباريات المجموعة
             c.execute("""
             SELECT player1, player2, score1, score2
             FROM group_matches
@@ -320,19 +322,47 @@ def tournament_details(id):
 
             matches = c.fetchall()
 
+            # 🔥 reset standings
             standings = {}
 
+            # 🧠 حساب النقاط
             for p1, p2, s1, s2 in matches:
 
+                # إنشاء اللاعب
                 if p1 not in standings:
-                    standings[p1] = 0
+                    standings[p1] = {"points": 0, "wins": 0}
                 if p2 not in standings:
-                    standings[p2] = 0
+                    standings[p2] = {"points": 0, "wins": 0}
 
+                # تحويل string → int (مهم)
+                s1 = int(s1)
+                s2 = int(s2)
+
+                # الحساب
                 if s1 > s2:
-                    standings[p1] += 3
+                    standings[p1]["points"] += 3
+                    standings[p1]["wins"] += 1
+                elif s2 > s1:
+                    standings[p2]["points"] += 3
+                    standings[p2]["wins"] += 1
                 else:
-                    standings[p2] += 3
+                    standings[p1]["points"] += 1
+                    standings[p2]["points"] += 1
+
+            # 🔥 ترتيب اللاعبين
+            sorted_players = sorted(
+                standings.items(),
+                key=lambda x: (x[1]["points"], x[1]["wins"]),
+                reverse=True
+            )
+
+            # 🔥 بناء rank
+            ranks = {}
+            for i, (player, data) in enumerate(sorted_players):
+                ranks[player] = i + 1
+
+
+
 
         if "generate_knockout" in request.form:
 
@@ -446,13 +476,16 @@ def tournament_details(id):
         
        
 
+    # 🔥 مهم: return خارج if
     return render_template(
         "tournament_details.html",
         tournament=tournament,
         players=players,
         groups=groups,
-        matches_dict=matches_dict 
-
+        matches_dict=matches_dict,
+        standings=standings,
+        sorted_players=sorted_players,
+        ranks=ranks if 'ranks' in locals() else {}
     )
 
 if __name__ == "__main__":

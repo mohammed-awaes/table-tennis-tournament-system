@@ -111,8 +111,9 @@
               <th>{{ loop.index }}</th>
             {% endfor %}
 
-            <th>W</th>
-            <th>P</th>
+            <th>Win</th>
+            <th>Points</th>
+            <th>Rating</th>
           </tr>
         </thead>
 
@@ -167,10 +168,13 @@
             {% endfor %}
 
             <!-- عدد الفوز -->
-            <td>0</td>
+            <td>{{ standings[p1]["wins"] if p1 in standings else 0 }}</td>
 
             <!-- النقاط -->
-            <td>0</td>
+            <td>{{ standings[p1]["points"] if p1 in standings else 0 }}</td>
+
+            <td>{{ ranks[p1] if p1 in ranks else "-" }}</td>
+
 
           </tr>
           {% endfor %}
