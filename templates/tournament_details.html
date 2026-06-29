@@ -137,7 +137,7 @@
 
                   {% if match %}
 
-                    <strong style="color:green;">
+                    <strong style="color:rgb(7, 214, 7);">
                       {{ match[0] }} - {{ match[1] }}
                     </strong>
 
@@ -167,13 +167,17 @@
 
             {% endfor %}
 
+            {%if standings%}
+
             <!-- عدد الفوز -->
-            <td>{{ standings[p1]["wins"] if p1 in standings else 0 }}</td>
+            <strong>{{ standings[p1]["wins"] if p1 in standings else 0 }}</strong>
 
             <!-- النقاط -->
-            <td>{{ standings[p1]["points"] if p1 in standings else 0 }}</td>
+            <strong>{{ standings[p1]["points"] if p1 in standings else 0 }}</strong>
 
-            <td>{{ ranks[p1] if p1 in ranks else "-" }}</td>
+            <strong>{{ ranks[p1] if p1 in ranks else "-" }}</strong>
+
+            {% endif %}
 
 
           </tr>

@@ -309,6 +309,7 @@ def tournament_details(id):
             conn.commit()
             return redirect(request.url)
         
+        
         if "calculate_group" in request.form:
 
             group = request.form["group_name"]
