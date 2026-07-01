@@ -167,17 +167,13 @@
 
             {% endfor %}
 
-            {%if standings%}
-
             <!-- عدد الفوز -->
-            <strong>{{ standings[p1]["wins"] if p1 in standings else 0 }}</strong>
+            <td>{{ standings_all[group_name][p1]["points"] if group_name in standings_all and p1 in standings_all[group_name] else 0 }}</td>
 
-            <!-- النقاط -->
-            <strong>{{ standings[p1]["points"] if p1 in standings else 0 }}</strong>
+            <td>{{ standings_all[group_name][p1]["wins"] if group_name in standings_all and p1 in standings_all[group_name] else 0 }}</td>
+            
+            <td>{{ ranks_all[group_name][p1] if group_name in ranks_all and p1 in ranks_all[group_name] else "-" }}</td>
 
-            <strong>{{ ranks[p1] if p1 in ranks else "-" }}</strong>
-
-            {% endif %}
 
 
           </tr>

@@ -266,7 +266,8 @@ def tournament_details(id):
     else:
         groups = None
 
-    standings = {}
+    standings_all = {}
+    ranks_all = {}
     sorted_players = []
 
     if request.method == "POST":
@@ -309,6 +310,9 @@ def tournament_details(id):
             conn.commit()
             return redirect(request.url)
         
+        standings_all = session.get("standings_all", {})
+        ranks_all = session.get("ranks_all", {})
+     
         
         if "calculate_group" in request.form:
 
@@ -357,10 +361,31 @@ def tournament_details(id):
                 reverse=True
             )
 
+
             # 🔥 بناء rank
             ranks = {}
+
+            current_rank = 1
+
             for i, (player, data) in enumerate(sorted_players):
-                ranks[player] = i + 1
+
+                if i == 0:
+                    ranks[player] = 1
+                else:
+                    prev_player, prev_data = sorted_players[i - 1]
+
+                    # 👇 إذا نفس النقاط والفوز → نفس الترتيب
+                    if data["points"] == prev_data["points"] and data["wins"] == prev_data["wins"]:
+                        ranks[player] = ranks[prev_player]
+                    else:
+                        ranks[player] = i + 1
+
+            standings_all[group] = standings
+            ranks_all[group] = ranks
+
+
+            session["standings_all"] = standings_all
+            session["ranks_all"] = ranks_all
 
 
 
@@ -484,7 +509,8 @@ def tournament_details(id):
         players=players,
         groups=groups,
         matches_dict=matches_dict,
-        standings=standings,
+        standings_all=standings_all,
+        ranks_all=ranks_all,
         sorted_players=sorted_players,
         ranks=ranks if 'ranks' in locals() else {}
     )
