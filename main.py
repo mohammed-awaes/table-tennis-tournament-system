@@ -463,6 +463,7 @@ def tournament_details(id):
             if not groups_count or groups_count < 2:
                 return redirect(request.url)
 
+
             # 🔥 حذف المجموعات القديمة
             c.execute("DELETE FROM groups WHERE tournament_id = ?", (id,))
 
