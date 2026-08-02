@@ -9,10 +9,10 @@ from services.start_tournament import start_tournament
 from services.generate_knockout import generate_knockout
 from services.save_match import save_match
 
-tournament_bp = Blueprint("tournament", __name__)
+tournament_details_bp = Blueprint("tournament_details", __name__)
 
 
-@tournament_bp.route('/tournament/<int:id>', methods=['GET', 'POST'])
+@tournament_details_bp.route('/tournament/<int:id>', methods=['GET', 'POST'])
 def tournament_details(id):
 
     conn = get_db()
