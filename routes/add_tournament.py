@@ -79,7 +79,7 @@ def add_tournament():
 
             for player in session["players"]:
                 c.execute(
-                    "INSERT INTO tournament_players (tournament_id, player_name) VALUES (?, ?)",
+                    "INSERT INTO tournament_players (tournament_id, player_id) VALUES (?, ?)",
                     (tournament_id, player)
                 )
 

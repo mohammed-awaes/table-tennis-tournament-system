@@ -5,7 +5,7 @@ from flask import Blueprint, Flask, render_template , request,redirect, session
 from routes.Tournaments import Tournaments_bp
 from routes.tournament_details import tournament_details_bp
 from routes.add_tournament import add_tournament_dp
-from routes.Players import players_bp
+from routes.Players import players, players_bp
 
 
 # إنشاء قاعدة البيانات والجداول إذا لم تكن موجودة
@@ -35,7 +35,7 @@ c.execute("""
 CREATE TABLE IF NOT EXISTS tournament_players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tournament_id INTEGER,
-    player_name TEXT
+    player_id INTEGER
 )
 """)
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS groups (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tournament_id INTEGER,
     group_name TEXT,
-    player_name TEXT
+    player_id TEXT
 )
 """)
 

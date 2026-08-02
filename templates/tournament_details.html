@@ -33,7 +33,7 @@
 
           {% if tournament[3] == "ongoing" %}
           <form method="POST" action="/tournament/{{ tournament[0] }}" style="display:inline;">
-            <input type="hidden" name="delete_player" value="{{ player }}">
+            <input type="hidden" name="delete_player" value="{{ player[0] }}">
             
             <button style="border:none; background:none; color:red; cursor:pointer;">
               ❌

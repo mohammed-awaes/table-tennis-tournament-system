@@ -14,7 +14,7 @@ def add_player(conn, tournament_id, form, players):
 
     # ✅ إضافة اللاعب
     c.execute(
-        "INSERT INTO tournament_players (tournament_id, player_name) VALUES (?, ?)",
+        "INSERT INTO tournament_players (tournament_id, player_id) VALUES (?, ?)",
         (tournament_id, new_player)
     )
 

@@ -24,7 +24,13 @@ def tournament_details(id):
     groups_count = tournament[4]
 
     # 🟢 اللاعبين
-    c.execute("SELECT player_name FROM tournament_players WHERE tournament_id = ?", (id,))
+    c.execute("""
+    SELECT players.name 
+    FROM tournament_players
+    JOIN players ON tournament_players.player_id = players.id
+    WHERE tournament_players.tournament_id = ?
+    """, (id,))
+
     players = [p[0] for p in c.fetchall()]
 
     # 🟢 المباريات
@@ -42,7 +48,7 @@ def tournament_details(id):
 
     # 🟢 المجموعات
     c.execute("""
-    SELECT group_name, player_name
+    SELECT group_name, player_id
     FROM groups
     WHERE tournament_id = ?
     """, (id,))
