@@ -36,6 +36,8 @@
       <input type="text" name="name" value="{{ name }}" placeholder="Tournament Name">
       <input type="date" name="date"  value="{{ date }}" placeholder="Tournament Date">
       <input type="number" name="groups_count" placeholder="Number of groups" min="2" value="{{ groups_count }}">
+      <input type="number" name="qualify_top" placeholder="Qualify Top" min="1" value="{{ qualify_top }}">
+      <input type="number" name="qualify_bottom" placeholder="Qualify Bottom" min="0" value="{{ qualify_bottom }}">
 
       <button name="create_tournament" class="create-btn">
         Create Tournament

@@ -29,11 +29,11 @@
       {% for player in players %}
         <div class="player-card d-flex justify-content-between align-items-center">
 
-          <span>🏓 {{ player }}</span>
+          <span>🏓 {{ player [1] }}</span>
 
           {% if tournament[3] == "ongoing" %}
           <form method="POST" action="/tournament/{{ tournament[0] }}" style="display:inline;">
-            <input type="hidden" name="delete_player" value="{{ player[0] }}">
+            <input type="hidden" name="delete_player" value="{{ player [0]}}">
             
             <button style="border:none; background:none; color:red; cursor:pointer;">
               ❌
@@ -111,8 +111,8 @@
               <th>{{ loop.index }}</th>
             {% endfor %}
 
-            <th>Win</th>
             <th>Points</th>
+            <th>Wins</th>
             <th>Rating</th>
           </tr>
         </thead>

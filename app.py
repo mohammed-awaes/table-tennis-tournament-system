@@ -27,7 +27,9 @@ CREATE TABLE IF NOT EXISTS tournaments (
     name TEXT,
     date TEXT,
     status TEXT DEFAULT 'ongoing',
-    groups_count INTEGER
+    groups_count INTEGER,
+    qualify_top INTEGER DEFAULT 2,
+    qualify_bottom INTEGER DEFAULT 0
 )
 """)
 

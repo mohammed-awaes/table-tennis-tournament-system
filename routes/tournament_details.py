@@ -25,13 +25,13 @@ def tournament_details(id):
 
     # 🟢 اللاعبين
     c.execute("""
-    SELECT players.name 
+    SELECT players.id, players.name
     FROM tournament_players
     JOIN players ON tournament_players.player_id = players.id
     WHERE tournament_players.tournament_id = ?
     """, (id,))
 
-    players = [p[0] for p in c.fetchall()]
+    players = c.fetchall()
 
     # 🟢 المباريات
     c.execute("""
@@ -48,9 +48,10 @@ def tournament_details(id):
 
     # 🟢 المجموعات
     c.execute("""
-    SELECT group_name, player_id
+    SELECT groups.group_name, players.name
     FROM groups
-    WHERE tournament_id = ?
+    JOIN players ON groups.player_id = players.id
+    WHERE groups.tournament_id = ?
     """, (id,))
     rows = c.fetchall()
 

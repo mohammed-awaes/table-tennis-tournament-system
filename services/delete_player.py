@@ -4,15 +4,14 @@ def delete_player(conn, tournament_id, form, players):
 
     player_id = form.get("delete_player")
 
-    # ❌ حماية: إذا اللاعب مش موجود
-    if player_id not in players:
+    if not player_id:
         return False
 
-    # ✅ حذف اللاعب
     c.execute("""
-        DELETE FROM tournament_players
-        WHERE tournament_id=? AND player_id=?
+    DELETE FROM tournament_players
+    WHERE tournament_id=? AND player_id=?
     """, (tournament_id, player_id))
+
     conn.commit()
 
     return True
